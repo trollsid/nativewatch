@@ -1,0 +1,328 @@
+collections{
+   group{
+      name: "layout/watchface";
+      images {
+         image: "aod_h.png" COMP;
+         image: "aod_m1.png" COMP;
+         image: "aod_m2.png" COMP;
+         image: "aod_m3.png" COMP;
+         image: "aod_m4.png" COMP;
+         image: "aod_m5.png" COMP;
+      }
+      script {
+         public minutes;
+         public hour;
+
+         /*public dbg(Float:val)
+         {
+            new buf[12];
+            snprintf(buf, 11, "%f", val);
+            set_text(PART:"aod/dbg", buf);
+         }*/
+
+         /*public dbg2(val)
+         {
+            new buf[12];
+            snprintf(buf, 11, "%d", val);
+            set_text(PART:"aod/dbg/2", buf);
+         }*/
+
+         public hideMinutes(val)
+         {
+            new i;
+            new j;
+            new pid;
+            new buf[24];
+            j = val;
+            //dbg(j);
+            for(i = 5; i > j; i--)
+            {
+               snprintf(buf, 23, "aod/m%d", i);
+               pid = get_part_id(buf);
+               custom_state(pid, "default", 0.0);
+               set_state_val(pid, STATE_VISIBLE, 0);
+               set_state(pid, "custom", 0.0);
+            }
+         }
+
+         public showMinutes(val)
+         {
+            new i;
+            new j;
+            new Float:angle;
+            new pid;
+            new x;
+            new buf[24];
+            j = val;
+            x = (val / 5);
+            angle = x * 30.0;
+//            dbg(angle);
+            for(i = 0; i < j; i++)
+            {
+               snprintf(buf, 23, "aod/m%d", i);
+               pid = get_part_id(buf);
+               custom_state(pid, "default", 0.0);
+               set_state_val(pid, STATE_VISIBLE, 1);
+               set_state_val(pid, STATE_MAP_ON, 1);
+               set_state_val(pid, STATE_MAP_ROT_Z, angle);
+               set_state(pid, "custom", 0.0);
+            }
+         }
+
+         public setHour(val)
+         {
+            new Float:h;
+            h = (val > 12 ? val - 12 : val)*30.0;
+            if(val > 12)
+            {
+               set_text(PART:"ampm", "PM");
+            }
+            else
+            {
+               set_text(PART:"ampm", "AM");
+            }
+            custom_state(PART:"aod/h", "default", 0.0);
+            set_state_val(PART:"aod/h", STATE_MAP_ON, 1);
+            set_state_val(PART:"aod/h", STATE_MAP_ROT_Z, h);
+            set_state(PART:"aod/h", "custom", 0.0);
+         }
+
+         public setMinutes(val)
+         {
+            new y;            	
+            new x;
+            if((val == 0)||(val == 60))
+            {
+               hideMinutes(0);
+               return;
+            }
+            x = val - ((val / 5)*5);
+            y = val%5;
+
+            showMinutes(val);
+            if(y != 0)
+            {
+               hideMinutes(x);
+            }
+//               dbg2(y);
+         }
+
+         public setTime()
+         {
+            new y;
+            new m;
+            new d;
+            new yd;
+            new wd;
+            new hr;
+            new mn;
+            new Float:sec;
+            date(y, m, d, yd, wd, hr, mn, sec);
+            setHour(hr);
+            setMinutes(mn);
+         }
+
+         public message(Msg_Type:type, id, ...) 
+         {
+            if(id == 0)
+            {
+               setTime();
+            }
+         }
+      }
+      parts {
+         part{ 
+            name:"aod/h";
+            scale: 1;
+            type: IMAGE;
+            description{ 
+               state: "default";
+               max: 360 360;
+               visible: 1;
+               image.normal: "aod_h.png";
+               aspect: 1 1;
+               align: 0.5 0.5;
+               rel1.relative: 0.00 0.00;
+               rel2.relative: 1.00 1.00;
+               map.on: 1;
+               map.rotation.z: 210.0;
+            }
+         }
+         part { 
+            name:"aod/m1";
+            scale: 1;
+            type: IMAGE;
+            description { 
+               state: "default";
+               max: 360 360;
+               visible: 1;
+               image.normal: "aod_m1.png";
+               aspect: 1 1;
+               align: 0.5 0.5;
+               rel1.relative: 0.00 0.00;
+               rel2.relative: 1.00 1.00;
+               map.on: 1;
+               map.rotation.z:0;
+            }
+         }
+         part { 
+            name:"aod/m2";
+            scale: 1;
+            type: IMAGE;
+            description { 
+               state:"default";
+               max: 360 360;
+               visible: 1;
+               image.normal: "aod_m2.png";
+               aspect: 1 1;
+               align: 0.5 0.5;
+               rel1.relative: 0.00 0.00;
+               rel2.relative: 1.00 1.00;
+               map.on: 1;
+               map.rotation.z:0;
+            }
+         }
+         part { 
+            name:"aod/m3";
+            scale: 1;
+            type: IMAGE;
+            description { 
+               state:"default";
+               max: 360 360;
+               visible: 1;
+               image.normal: "aod_m3.png";
+               aspect: 1 1;
+               align: 0.5 0.5;
+               rel1.relative: 0.00 0.00;
+               rel2.relative: 1.00 1.00;
+               map.on: 1;
+               map.rotation.z:0;
+            }
+         }
+         part { 
+            name:"aod/m4";
+            scale: 1;
+            type: IMAGE;
+            description { 
+               state:"default";
+               max: 360 360;
+               visible: 1;
+               image.normal: "aod_m4.png";
+               aspect: 1 1;
+               align: 0.5 0.5;
+               rel1.relative: 0.00 0.00;
+               rel2.relative: 1.00 1.00;
+               map.on: 1;
+               map.rotation.z:0;
+            }
+         }
+         part { 
+            name:"aod/m5";
+            scale: 1;
+            type: IMAGE;
+            description { 
+               state:"default";
+               max: 360 360;
+               visible: 1;
+               image.normal: "aod_m5.png";
+               aspect: 1 1;
+               align: 0.5 0.5;
+               rel1.relative: 0.00 0.00;
+               rel2.relative: 1.00 1.00;
+               map.on: 1;
+               map.rotation.z:0;
+            }
+         }
+         part{ 
+            name:"aod/act";
+            scale: 1;
+            type: RECT;
+            description { 
+               state:"default";
+               color: 0 136 170 55;
+               visible: 1;
+               max: 360 360;
+               align: 0.5 0.5;
+               rel1.relative: 0.00 0.00;
+               rel2.relative: 1.00 1.00;
+            }
+         }
+         /*
+         part { "aod/dbg";
+            scale: 1;
+            type: TEXT;
+            effect: SOFT_OUTLINE;
+            description { "default";
+               color: 255 255 255 255;
+               color2: 0 136 170 100;
+               visible: 1;
+               text {
+                  size: 50;
+                  font: "Sans";
+                  text: "TEXT";
+                  align: 0.5 0.5;
+                  min: 0 0;
+               }
+               align: 0.5 0.5;
+               rel1.relative: 0.00 0.00;
+               rel2.relative: 0.41 0.05;
+            }
+         }*/
+         /*part{ "aod/dbg/2";
+            scale: 1;
+            type: TEXT;
+            effect: SOFT_OUTLINE;
+            desc { "default";
+               color: 255 255 255 255;
+               color2: 0 136 170 100;
+               visible: 1;
+               text {
+                  size: 50;
+                  font: "Sans";
+                  text: "TEXT";
+                  align: 0.5 0.5;
+                  min: 0 0;
+               }
+               align: 0.5 0.5;
+               rel1.relative: 0.4090 0.0000;
+               rel2.relative: 0.8890 0.0500;
+            }
+         }*/
+         part { 
+            name:"ampm";
+            type: TEXT;
+            scale: 1;
+            effect: SOFT_OUTLINE;
+            description { 
+               state:"default";
+               color: 255 255 255 255;
+               color2: 0 136 170 100;
+               max: 360 360;
+               visible: 1;
+               text {
+                  size: 35;
+                  font: "Sans";
+                  text: "AM";
+                  align: 0.5 0.5;
+                  min: 0 0;
+               }
+               align: 0.5 0.5;
+               rel1.relative: 0.2505 0.3598;
+               rel2.relative: 0.7505 0.6398;
+            }
+         }
+      }   
+      programs
+      {
+         program
+         {
+            name: "aod/update";
+            source: "aod/act";
+            signal: "mouse,down,1";
+            script{
+               setTime();
+            }
+         }
+      }
+   }
+}
